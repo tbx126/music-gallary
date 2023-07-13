@@ -11,9 +11,9 @@
     <img id="cover">
     <audio id="player" controls></audio>
     <div id="lyrics"></div>
-    <script type="module">
-        import * as mm from './node_modules/music-metadata-browser/dist/index.js';
-        import { parse } from './node_modules/lrc-parser/dist/lrc-parser.js';
+    <script src="dist/main.js">
+        import * as mm from '../node_modules/music-metadata-browser/dist/index.js';
+        import { parse } from '../node_modules/lrc-parser/dist/lrc-parser.js';
 
         const fileInput = document.getElementById('file');
         const player = document.getElementById('player');

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "lrc-parser": "^1.0.1",
+    "music-metadata-browser": "^2.5.10"
+  }
+}
