@@ -28,9 +28,13 @@ fileInput.addEventListener('change', async function(e) {
 
     // Parse and display lyrics
     if (lyricsText && lyricsText[0]) {
+        console.log(lyricsText[0].text); // Check if lyrics text is correctly extracted
         lyrics = parse(lyricsText[0].text);
-        lyricsDiv.textContent = lyrics.lines.map(line => line.text).join('\n');
+        console.log(lyrics); // Check if lyrics are correctly parsed
+        lyricsDiv.innerHTML = lyrics.lines.map(line => `<p id="line-${line.id}">${line.text}</p>`).join('');
     }
+
+    console.log(lyricsDiv.textContent); // Check if lyrics are correctly displayed
 
     // Play music
     player.src = URL.createObjectURL(file);
