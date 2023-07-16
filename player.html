@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Lyrics</title>
+
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+}
+
+#audio {
+  width: 300px;
+  height: 45px;
+  margin-bottom: 20px;
+}
+
+#lyrics {
+  font-size: 24px;
+  color: #333;
+  background-color: #FFF;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  max-width: 800px;
+}
+</style>
+</head>
+<body>
+
+<audio id="audio" src="./如愿 - 王菲.mp3" controls></audio>
+
+<div id="lyrics"></div>
+
+<script>
+
+// 解析歌词时间
+function parseLrcTime(timeStr) {
+
+  console.log('原始时间字符串:', timeStr);
+  
+  // 使用正则提取 [min:sec.millisec]
+  const pattern = /(?<min>\d+):(?<sec>\d+)(\.\d+)?/;
+
+  const result = timeStr.match(pattern);
+
+  console.log('匹配结果:', result);
+  
+  if (!result) return 0;
+
+  const min = parseInt(result[1]) * 60;
+  console.log('分钟:', min);
+  
+  const sec = parseInt(result[2]);
+  console.log('秒:', sec);
+  
+  const millisec = result[3] ? parseInt(result[3].substring(1)) : 0;
+  console.log('毫秒:', millisec);
+  
+  return min + sec + millisec/1000;
+
+}
+
+// 获取歌词
+async function getLyrics() {
+
+  console.log('开始获取歌词');
+
+  const response = await fetch('./如愿 - 王菲.lrc');
+
+  console.log('响应状态码:', response.status);
+
+  const lyricsText = await response.text();
+
+  console.log('歌词内容长度:', lyricsText.length);
+
+  return lyricsText;
+
+}
+
+// 主逻辑
+(async function() {
+
+  const audio = document.getElementById('audio');
+  const lyricsDiv = document.getElementById('lyrics');
+
+  const lyrics = await getLyrics();
+
+  // 处理时间更新
+  audio.ontimeupdate = function() {
+
+    const currentTime = audio.currentTime;
+    console.log('Current Time:', currentTime);
+
+    const lines = lyrics.split('\n');
+    console.log('Lines:', lines);
+
+    let currentLine = '';
+
+    for(let i = 0; i < lines.length; i++) {
+
+      const time = parseLrcTime(lines[i].substring(1));
+      console.log('Time:', time);
+
+      if(time <= currentTime) {
+        currentLine = lines[i];
+      } else {
+        break;
+      }
+
+    }
+
+    console.log('Current Line:', currentLine);
+
+    // 测试直接设置currentLine
+    //currentLine = 'Test';
+    
+    lyricsDiv.textContent = currentLine;
+
+  }
+
+})();
+
+</script>
+
+</body>
+</html>
